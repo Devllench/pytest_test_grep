@@ -1,17 +1,25 @@
-# import unittest
-import os
+import os,pytest
 
-def grep_start(x):
+def grep_start(grep_commands='', grep_parameters=''):
+    grep_command_start = grep_commands + grep_parameters
+    #print("CODE STATUS:")
+    print(os.system(grep_command_start))
+    return os.system(grep_command_start)
 
-    os.system('/bin/grep' + x)
-    #list_files = subprocess.run([" ", x])
-    #print("The exit code was: %d" % list_files)
+@pytest.mark.parametrize("grep_commands_tests", ['/bin/grep ', 'grep '])
+def test_grep_without_parameters(grep_commands_tests):
+    assert grep_start(grep_commands_tests) == 512
 
-    return 1
+@pytest.mark.parametrize("grep_parameters_tests", [' --help'])
+@pytest.mark.parametrize("grep_commands_tests", ['/bin/grep ', 'grep '])
+def test_grep_help_positive(grep_commands_tests,grep_parameters_tests):
+    #print("\nStart grep test")
+    #print("\nCMD: " + grep_commands_positive_tests,grep_parameters_positive_tests)
+    assert grep_start(grep_commands_tests,grep_parameters_tests) == 0
 
-
-def test_answer():
-    grep_parameters = ' --help'
-    print("\nstart grep")
-    print("\nCMD: grep" + grep_parameters)
-    assert grep_start(grep_parameters) == 1
+@pytest.mark.parametrize("grep_parameters_tests", [' --help'])
+@pytest.mark.parametrize("grep_commands_tests", ['/bin/grep ', 'grep '])
+def test_grep_help_positive(grep_commands_tests,grep_parameters_tests):
+    #print("\nStart grep test")
+    #print("\nCMD: " + grep_commands_positive_tests,grep_parameters_positive_tests)
+    assert grep_start(grep_commands_tests,grep_parameters_tests) == 0
