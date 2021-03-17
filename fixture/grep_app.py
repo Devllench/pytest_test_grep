@@ -12,6 +12,6 @@ class GrepAppClass:
     def get_len_exit_data(self):
         #запсь выходных данных команды
         cmd = subprocess.getstatusoutput(self.grep_command_start)
-
-        print(cmd[-1])
+        #print(cmd[-1])
         return len(cmd[-1])
+
