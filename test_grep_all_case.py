@@ -422,12 +422,13 @@ class TestAll:
     @pytest.mark.parametrize("grep_options_tests", ['"JON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-Co 14'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
-    @pytest.mark.parametrize("valid_len_assert", [42])
+    @pytest.mark.parametrize("valid_len_assert_ru", [42])
+    @pytest.mark.parametrize("valid_len_assert_en", [40])
     def test_line_control_context_err(self, grep_commands_tests, grep_parameters_tests, grep_options_tests,
-                                     grep_find_templates_tests,valid_len_assert):
+                                     grep_find_templates_tests,valid_len_assert_ru,valid_len_assert_en):
         grep_command = GrepAppClass(grep_commands_tests, grep_parameters_tests, grep_options_tests,
                                     grep_find_templates_tests)
-        assert grep_command.get_len_exit_data() == valid_len_assert
+        assert grep_command.get_len_exit_data() == valid_len_assert_ru or valid_len_assert_en
 
     # добавить бинарный файл для проверки
     @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
