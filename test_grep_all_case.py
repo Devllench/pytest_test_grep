@@ -1,35 +1,44 @@
 import pytest
 from fixture.grep_app import GrepAppClass
+from model.grep_tests_parametrize import GrepPar
 
 # тесты grep
 class TestAll:
 
+    case_file_name = GrepPar.get_case_file_name(case_id=0)
     # тестирования всех параметров
     # тест считается пройденым если мы получаем ожидаемое количество символов
     # для проверки теста можно использовать встроенные утилиты linux
     # Пример: grep --v | wc -m минус 1 символ
-    @pytest.mark.parametrize("grep_options_tests", ['--v', '--version'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
+    @pytest.mark.parametrize("grep_options_tests", ['"(aa|JON)"'])
+    @pytest.mark.parametrize("grep_parameters_tests", ['-E', '--extended-regexp', '-P', '--perl-regexp'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
-    @pytest.mark.parametrize("valid_len_assert", [375])
-    def test_test(self, grep_commands_tests, grep_options_tests,valid_len_assert):
-        grep_command = GrepAppClass(grep_commands_tests, grep_options_tests)
+    @pytest.mark.parametrize("valid_len_assert", [36])
+    def test_for_test(self, grep_commands_tests, grep_parameters_tests, grep_options_tests,
+                                              grep_find_templates_tests, valid_len_assert):
+        grep_command = GrepAppClass(grep_commands_tests, grep_parameters_tests, grep_options_tests,
+                                    grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
     @pytest.mark.parametrize("grep_options_tests", ['--v', '--version'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
-    @pytest.mark.parametrize("valid_len_assert", [375])
-    def test_version(self, grep_commands_tests, grep_options_tests,valid_len_assert):
+    @pytest.mark.parametrize("valid_len_assert_ru", [375])
+    @pytest.mark.parametrize("valid_len_assert_en", [365])
+    def test_version(self, grep_commands_tests, grep_options_tests,valid_len_assert_ru,valid_len_assert_en):
         grep_command = GrepAppClass(grep_commands_tests, grep_options_tests)
-        assert grep_command.get_len_exit_data() == valid_len_assert
+        assert grep_command.get_len_exit_data() == valid_len_assert_ru or valid_len_assert_en
+
 
     @pytest.mark.parametrize("grep_options_tests", ['--help'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
-    @pytest.mark.parametrize("valid_len_assert", [4736])
-    def test_help(self, grep_commands_tests, grep_options_tests,valid_len_assert):
+    @pytest.mark.parametrize("valid_len_assert_ru", [4736])
+    @pytest.mark.parametrize("valid_len_assert_en", [3904])
+    def test_help(self, grep_commands_tests, grep_options_tests,valid_len_assert_ru,valid_len_assert_en):
         grep_command = GrepAppClass(grep_commands_tests, grep_options_tests)
-        assert grep_command.get_len_exit_data() == valid_len_assert
+        assert grep_command.get_len_exit_data() == valid_len_assert_ru or valid_len_assert_en
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"(aa|JON)"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-E','--extended-regexp', '-P','--perl-regexp'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -40,7 +49,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-G', '--basic-regexp'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -51,7 +60,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"JOSEPH"'])
     @pytest.mark.parametrize("grep_parameters_tests",['-F', '--fixed-strings'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -62,7 +71,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", [''])
     @pytest.mark.parametrize("grep_parameters_tests", ['-e good', '--regexp=good'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -73,7 +82,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['JONH*'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-i', '--ignore-case'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -84,7 +93,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"aa"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-i', '--ignore-case'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -95,7 +104,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"aa"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['--no-ignore-case'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -107,7 +116,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-v','--invert-match'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -118,7 +127,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"WILLIAM.txt"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-w','--word-regexp'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -129,7 +138,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"CHARLES"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-x', '--line-regexp'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -140,7 +149,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"aa"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-y'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -151,7 +160,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"ON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-c','--count'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -162,7 +171,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"ON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['--color=always', '--colour=always'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -173,7 +182,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt grep_unitest_log_2.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0] + ' ' + case_file_name[1]])
     @pytest.mark.parametrize("grep_options_tests", ['"ON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-L', '--files-without-match'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -184,7 +193,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt grep_unitest_log_2.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0] + ' ' + case_file_name[1]])
     @pytest.mark.parametrize("grep_options_tests", ['"ON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-L', '--files-without-match'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -195,7 +204,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt grep_unitest_log_2.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0] + ' ' + case_file_name[1]])
     @pytest.mark.parametrize("grep_options_tests", ['"ON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-l', '--files-with-matches'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -206,7 +215,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"ON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-m 4', '--max-count=4'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -217,7 +226,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-o', '--only-matching'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -228,7 +237,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-q', '--quiet', '--silent'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -240,7 +249,7 @@ class TestAll:
         assert grep_command.get_len_exit_data() == valid_len_assert
 
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log_bad.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[2]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-s', '--no-messages'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -251,7 +260,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-b', '--byte-offset'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -262,7 +271,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-H', '--with-filename'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -273,7 +282,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt grep_unitest_log_2.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0] + ' ' + case_file_name[1]])
     @pytest.mark.parametrize("grep_options_tests", ['"aa"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-h', '--no-filename'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -284,7 +293,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt grep_unitest_log_2.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0] + ' ' + case_file_name[1]])
     @pytest.mark.parametrize("grep_options_tests", ['"abs"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-h', '--no-filename'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -296,9 +305,9 @@ class TestAll:
         assert grep_command.get_len_exit_data() == valid_len_assert
 
     # проверить тест
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log*'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[4]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON*"'])
-    @pytest.mark.parametrize("grep_parameters_tests", ['--label=grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_parameters_tests", ['--label='+case_file_name[0]])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
     @pytest.mark.parametrize("valid_len_assert", [769])
     def test_prefix_control_label(self, grep_commands_tests, grep_parameters_tests, grep_options_tests,
@@ -307,7 +316,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-n','--line-number'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -318,7 +327,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-T -H', '--initial-tab -H'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -330,7 +339,7 @@ class TestAll:
         assert grep_command.get_len_exit_data() == valid_len_assert
 
     # проверить тест
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-u', '--unix-byte-offsets'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -341,7 +350,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log*'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[4]])
     @pytest.mark.parametrize("grep_options_tests", ['"txt"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-Z', '--null'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -352,7 +361,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-A 0',' --after-context=0'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -363,18 +372,19 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log*'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[4]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-Ao 10 '])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
-    @pytest.mark.parametrize("valid_len_assert", [42])
+    @pytest.mark.parametrize("valid_len_assert_ru", [42])
+    @pytest.mark.parametrize("valid_len_assert_en", [40])
     def test_line_control_after_err(self, grep_commands_tests, grep_parameters_tests, grep_options_tests,
-                                grep_find_templates_tests,valid_len_assert):
+                                grep_find_templates_tests,valid_len_assert_ru,valid_len_assert_en):
         grep_command = GrepAppClass(grep_commands_tests, grep_parameters_tests, grep_options_tests,
                                     grep_find_templates_tests)
-        assert grep_command.get_len_exit_data() == valid_len_assert
+        assert grep_command.get_len_exit_data() == valid_len_assert_ru or valid_len_assert_en
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-B 4',' --before-context=4'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -385,41 +395,42 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log*'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[4]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-Bo 10'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
-    @pytest.mark.parametrize("valid_len_assert", [42])
+    @pytest.mark.parametrize("valid_len_assert_ru", [42])
+    @pytest.mark.parametrize("valid_len_assert_en", [40])
     def test_line_control_before_err(self, grep_commands_tests, grep_parameters_tests, grep_options_tests,
-                                grep_find_templates_tests,valid_len_assert):
+                                grep_find_templates_tests,valid_len_assert_ru,valid_len_assert_en):
         grep_command = GrepAppClass(grep_commands_tests, grep_parameters_tests, grep_options_tests,
                                     grep_find_templates_tests)
-        assert grep_command.get_len_exit_data() == valid_len_assert
+        assert grep_command.get_len_exit_data() == valid_len_assert_ru or valid_len_assert_en
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-C 1','-1', '--context=1'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
     @pytest.mark.parametrize("valid_len_assert", [624])
-    def test_line_control_before(self, grep_commands_tests, grep_parameters_tests, grep_options_tests,
+    def test_line_control_context(self, grep_commands_tests, grep_parameters_tests, grep_options_tests,
                                  grep_find_templates_tests,valid_len_assert):
         grep_command = GrepAppClass(grep_commands_tests, grep_parameters_tests, grep_options_tests,
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log*'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[4]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-Co 14'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
     @pytest.mark.parametrize("valid_len_assert", [42])
-    def test_line_control_before_err(self, grep_commands_tests, grep_parameters_tests, grep_options_tests,
+    def test_line_control_context_err(self, grep_commands_tests, grep_parameters_tests, grep_options_tests,
                                      grep_find_templates_tests,valid_len_assert):
         grep_command = GrepAppClass(grep_commands_tests, grep_parameters_tests, grep_options_tests,
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
     # добавить бинарный файл для проверки
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-a','--text'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -431,7 +442,7 @@ class TestAll:
         assert grep_command.get_len_exit_data() == valid_len_assert
 
     # добавить бинарный файл для проверки
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['--binary-files=text'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -443,19 +454,20 @@ class TestAll:
         assert grep_command.get_len_exit_data() == valid_len_assert
 
     # добавить бинарный файл для проверки
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"JON*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['--binary-files=te'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
-    @pytest.mark.parametrize("valid_len_assert", [37])
+    @pytest.mark.parametrize("valid_len_assert_ru", [37])
+    @pytest.mark.parametrize("valid_len_assert_en", [31])
     def test_fb_sel_bin_err(self, grep_commands_tests, grep_parameters_tests, grep_options_tests,
-                                     grep_find_templates_tests,valid_len_assert):
+                                     grep_find_templates_tests,valid_len_assert_ru,valid_len_assert_en):
         grep_command = GrepAppClass(grep_commands_tests, grep_parameters_tests, grep_options_tests,
                                     grep_find_templates_tests)
-        assert grep_command.get_len_exit_data() == valid_len_assert
+        assert grep_command.get_len_exit_data() == valid_len_assert_ru or valid_len_assert_en
 
     # добавить устройство для проверки
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"JONH*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-D read' ,'--devices=read'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -466,7 +478,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_unitest_log.txt'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[0]])
     @pytest.mark.parametrize("grep_options_tests", ['"JONH*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-d read', '--directories=read'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -477,7 +489,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['grep_*'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[4]])
     @pytest.mark.parametrize("grep_options_tests", ['"DANIEL"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['--exclude=*log.txt'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -488,7 +500,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['g*'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[5]])
     @pytest.mark.parametrize("grep_options_tests", ['"DANIEL"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['--exclude-dir=*'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -499,7 +511,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['g*'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[5]])
     @pytest.mark.parametrize("grep_options_tests", ['"DANIA*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-I'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -510,7 +522,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['g*'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[5]])
     @pytest.mark.parametrize("grep_options_tests", ['"absf*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['--include=*'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -521,7 +533,7 @@ class TestAll:
                                     grep_find_templates_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert
 
-    @pytest.mark.parametrize("grep_find_templates_tests", ['g*'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[5]])
     @pytest.mark.parametrize("grep_options_tests", ['"NATE*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-r', '--recursive'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -533,7 +545,7 @@ class TestAll:
         assert grep_command.get_len_exit_data() == valid_len_assert
 
     # добавить дерриктории
-    @pytest.mark.parametrize("grep_find_templates_tests", ['g*'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[5]])
     @pytest.mark.parametrize("grep_options_tests", ['"NATET*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-R', '--dereference-recursive'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -545,7 +557,7 @@ class TestAll:
         assert grep_command.get_len_exit_data() == valid_len_assert
 
     # добавит бинарный файл
-    @pytest.mark.parametrize("grep_find_templates_tests", ['g*'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[5]])
     @pytest.mark.parametrize("grep_options_tests", ['"NORBERT"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-U', '--binary'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
@@ -557,7 +569,7 @@ class TestAll:
         assert grep_command.get_len_exit_data() == valid_len_assert
 
     # добавит бинарный файл
-    @pytest.mark.parametrize("grep_find_templates_tests", ['g*'])
+    @pytest.mark.parametrize("grep_find_templates_tests", [case_file_name[5]])
     @pytest.mark.parametrize("grep_options_tests", ['"HORM*"'])
     @pytest.mark.parametrize("grep_parameters_tests", ['-z','--null-data'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
