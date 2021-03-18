@@ -29,7 +29,6 @@ class TestAll:
         grep_command = GrepAppClass(grep_commands_tests, grep_options_tests)
         assert grep_command.get_len_exit_data() == valid_len_assert_ru or valid_len_assert_en
 
-
     @pytest.mark.parametrize("grep_options_tests", ['--help'])
     @pytest.mark.parametrize("grep_commands_tests", ['grep'])
     @pytest.mark.parametrize("valid_len_assert_ru", [4736])

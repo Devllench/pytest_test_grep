@@ -1,4 +1,4 @@
-import os,pytest,subprocess
+import os,subprocess
 # Класс выполняющий команду grep
 class GrepAppClass:
 

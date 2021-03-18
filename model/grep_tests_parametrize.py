@@ -1,7 +1,4 @@
-#Классы
-#from fixture.grep_app import GrepAppClass
-
-
+#Классы для опередления параметров тестов
 class GrepPar:
 
     @staticmethod
